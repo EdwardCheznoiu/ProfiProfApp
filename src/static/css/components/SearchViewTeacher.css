@@ -1,0 +1,21 @@
+.search-view-container {
+    width: 80%;
+    margin: 20px auto;
+}
+
+
+.loading {
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.input-group {
+    margin-bottom: 20px;
+
+}
+
+.input-group input {
+    font-size: 25px;
+}

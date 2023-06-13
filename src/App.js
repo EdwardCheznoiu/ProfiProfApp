@@ -1,11 +1,18 @@
 import './App.css';
-import Navbar from './components/Navbar';
-import HeaderCarousel from './components/HeaderCarousel';
+import Footer from './components/big/Footer';
+import AuthService from './services/auth.service';
+import { useState, useEffect } from 'react';
+import NavigationRouter from './components/big/NavigationRouter';
 function App()
 {
+
   return (
-    <Navbar />
+    <>
+      <NavigationRouter />
+
+    </>
   );
+
 }
 
 export default App;
