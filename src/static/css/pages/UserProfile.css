@@ -8,6 +8,7 @@
      margin: 2rem auto;
      padding: 2rem;
      background-color: #336699;
+     box-shadow: 2px 2px 12px #336699;
      border-radius: 10px;
      z-index: 1;
      color: #fff;
@@ -76,45 +77,39 @@
  }
 
  .user-details {
+
      width: 90%;
      display: flex;
      flex-direction: column;
      justify-content: left;
      align-items: left;
      gap: 1rem;
-     margin: 2rem auto;
+     margin: 0 auto 2rem;
      padding: 2rem;
      background-color: #ccc;
-     border-radius: 10px;
-
- }
-
- .user-profile-navbar {
-     width: 90%;
-     margin: auto;
-     display: flex;
-     flex-direction: row;
-     gap: 2rem;
-     background-color: #0066ff;
-
- }
-
- .user-profile-navbar li {
-     list-style-type: none;
-     cursor: pointer;
-     font-size: 1.3vw;
-     color: #020202;
-     padding: 1.5rem;
-     transition: .3s;
- }
-
- .user-profile-navbar li:hover {
-     background-color: #fff;
-
+     border-bottom-left-radius: 10px;
+     border-bottom-right-radius: 10px;
  }
 
  .vertical-line {
      height: 30px;
      width: 2px;
      background-color: #fff;
+ }
+
+ .user-edit {
+     width: 30px;
+     height: 30px;
+     cursor: pointer;
+ }
+
+ .stud-container {
+     height: 90vh;
+ }
+
+ @media only screen and (max-width: 1000px) {
+     .table {
+         overflow-y: hidden;
+
+     }
  }

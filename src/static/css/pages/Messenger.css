@@ -7,28 +7,29 @@
 }
 
 .messenger-conv-container {
-    width: 25%;
-    height: 89vh;
-    border: 1px solid gray;
+    width: 30%;
+    height: 90%;
+
     overflow-y: scroll;
     padding-left: 5px;
     padding-right: 5px;
 }
 
 .messenger-chat-container {
-    width: 75%;
-    height: 89vh;
-    border: 1px solid gray;
+    width: 70%;
+    height: 100%;
+
 }
 
 .conv-container {
     width: 100%;
-    height: 80px;
+    height: auto;
     border-bottom: 1px solid gray;
     cursor: pointer;
     margin: 10px auto;
     display: flex;
     flex-direction: row;
+    padding: 1rem;
 }
 
 .conv-container:hover .conv-name {
@@ -43,6 +44,7 @@
 .conv-image img {
     width: 100%;
     height: 100%;
+    border-radius: 25px;
 }
 
 .conv-name {
@@ -64,58 +66,92 @@
     position: relative;
     display: flex;
     flex-direction: column;
+    height: 79%;
     overflow-y: scroll;
 }
 
 .input-container {
-    width: 100%;
+    width: 75%;
     height: 50px;
-    position: absolute;
-    bottom: 0;
-    border: 1px solid gray;
+    position: fixed;
+    bottom: .5rem;
 }
 
 .input-container input {
-    width: 100%;
+    width: 90%;
     height: 100%;
 }
 
+
 .input-container img {
-    position: absolute;
     right: 10px;
     top: 10px;
     cursor: pointer;
 }
 
 .message-chat-content {
-    height: 100%
+    height: 90%;
 }
 
-.message-chat-msg {
-    background-color: #002db3;
+.message-chat-msg-right {
+    width: 50%;
+    background-color: #009933;
     margin: 10px;
-    padding-right: 10px;
-    border-radius: 10px;
-    padding-left: 10px;
+    padding: 1rem;
+    border-radius: 25px;
+    box-shadow: 2px 2px 10px #009933;
     position: relative;
+    float: right;
 }
 
-.message-chat-msg .msg-sender {
+.message-chat-msg-left {
+    width: 50%;
+    background-color: #006699;
+    margin: 10px;
+    padding: 1rem;
+    border-radius: 25px;
+    box-shadow: 2px 2px 10px #006699;
+    position: relative;
+    float: left;
+}
+
+.message-chat-msg-left .msg-sender,
+.message-chat-msg-right .msg-sender {
     color: #cccccc;
     font-weight: bold;
 }
 
-.message-chat-msg .msg-body {
+.message-chat-msg-left .msg-body,
+.message-chat-msg-right .msg-body {
     color: #fff;
     font-weight: bold;
 }
 
-.dispose-msg {
-    position: absolute;
-    top: 0rem;
-    right: 1.2rem;
-    color: #fff;
-    font-size: 20px;
-    font-weight: bold;
-    cursor: pointer;
+.no-message {
+    width: 100%;
+    margin-top: 15%;
+    display: flex;
+    font-size: 30px;
+    justify-content: center;
+    align-items: center;
+}
+
+
+@media only screen and (max-width: 900px) {
+    .conv-container {
+        justify-content: center;
+        align-items: center;
+    }
+
+    .conv-name {
+        display: none;
+    }
+
+    .info-conv {
+        display: none;
+    }
+
+    .conv-image {
+        width: 60px;
+    }
 }

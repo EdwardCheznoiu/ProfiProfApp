@@ -1,26 +1,33 @@
-
+import { Link } from 'react-router-dom';
+import '../../static/css/components/Footer.css'
 function Footer()
 {
-
+    const currentYear = new Date().getFullYear();
     return (
-        <div class="d-flex flex-column flex-md-row text-center text-md-start justify-content-between py-4 px-4 px-xl-5 bg-primary">
-
-            <div class="text-white mb-3 mb-md-0">
-                Copyright © 2020. All rights reserved.
+        <div className="footer">
+            <div className='footer-row'>
+                <div className='util-links'>
+                    <div className='util-links-tit'>Resurse</div>
+                    <a href='https://icons8.com/icons/set/tiktok'>icons8.com</a>
+                    <a href='https://dotnet.microsoft.com/en-us/apps/aspnet/apis'>ASP.NET Core</a>
+                    <a href='https://www.rabbitmq.com/getstarted.html'>RabbitMq</a>
+                    <a href='https://react.dev/learn'>React</a>
+                    <a href='https://docs.docker.com/'>Docker</a>
+                </div>
+                <div className='social-media'>
+                    <img src={require('../../static/imgs/footer/fb.png')} />
+                    <img src={require('../../static/imgs/footer/insta.png')} />
+                    <img src={require('../../static/imgs/footer/tiktok.png')} />
+                </div>
             </div>
-            <div>
-                <a href="#!" class="text-white me-4">
-                    <i class="fab fa-facebook-f"></i>
-                </a>
-                <a href="#!" class="text-white me-4">
-                    <i class="fab fa-twitter"></i>
-                </a>
-                <a href="#!" class="text-white me-4">
-                    <i class="fab fa-google"></i>
-                </a>
-                <a href="#!" class="text-white">
-                    <i class="fab fa-linkedin-in"></i>
-                </a>
+            <div className='footer-column'>
+                <div className='contact-about'>
+                    <Link to='contact'>Contact</Link>
+                    <Link to='about'>Despre</Link>
+                </div>
+                <div className="copyright">
+                    &copy; {currentYear} ProfiProf realizat de Edward Cheznoiu. Toate drepturile rezervate.
+                </div>
             </div>
         </div>
     );

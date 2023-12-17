@@ -7,12 +7,11 @@ const login = async (email, password) =>
     try
     {
         const response = await axios.post(API_URL + "/login", { email, password });
-        console.log(response.data)
-        if (response.data) { localStorage.setItem("user", JSON.stringify(response.data)); }
+        if (response.data) { localStorage.setItem("user", JSON.stringify(response.data)); localStorage.setItem("loginSucces", "false"); }
     }
     catch (error)
     {
-        return error;
+        return Promise.reject(error);
     }
 }
 
@@ -43,15 +42,33 @@ const getLoginDetails = async () =>
 const logout = () =>
 {
     localStorage.removeItem("user");
-    window.location.replace("/login")
+    window.location.replace("/")
 }
 
+const hasAuthExpired = () =>
+{
+    const token = localStorage.getItem("user");
+    try
+    {
+        const decoded = jwtDecode(token);
+        if (decoded.exp < Date.now() / 1000)
+        {
+            return true;
+        }
+    } catch (error)
+    {
+
+        return true;
+    }
+    return false;
+}
 
 const AuthService = {
     login,
     register,
     getLoginDetails,
-    logout
+    logout,
+    hasAuthExpired
 };
 
 export default AuthService;

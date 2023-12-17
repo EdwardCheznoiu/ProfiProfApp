@@ -1,5 +1,5 @@
 import axios from "axios";
-import { v4 as uuidv4 } from 'uuid';
+import UserService from "./users.service";
 const API_URL = "https://localhost:5003/";
 
 const getMessagesFromConv = async (convId) =>
@@ -16,7 +16,7 @@ const getConversations = async (userId, logedUserId) =>
     try
     {
         const response = await axios.get(API_URL + "conversations/" + logedUserId + "/" + userId);
-        if (response.status === 200)
+        if (response)
         {
             return response.data[0].id
         }
@@ -25,27 +25,8 @@ const getConversations = async (userId, logedUserId) =>
     {
         return null;
     }
-
-
 }
 
-const createConversation = async (userId, logedUserId) =>
-{
-    try
-    {
-        await axios.post(API_URL + "conversations/" + userId + "/" + logedUserId, { userId, logedUserId });
-    }
-    catch (error)
-    {
-        console.log(error);
-    }
-
-}
-
-const getMessage = async () =>
-{
-
-}
 
 const getMessages = async (userId, logedUserId) =>
 {
@@ -63,15 +44,12 @@ const getMessages = async (userId, logedUserId) =>
 
 const getMessagesByBody = async (userId, logedUser, messageBody) =>
 {
-    console.log(userId);
-    console.log(logedUser);
-    console.log(messageBody);
     try
     {
         const conversationId = await getConversations(userId, logedUser);
         if (conversationId)
         {
-            const response = await axios.get(API_URL + "messages/body/" + userId + "/" + logedUser + "/" + messageBody);
+            const response = await axios.get(API_URL + "messages/body/" + userId + "/" + conversationId + "/" + messageBody);
             if (response.data)
                 return response.data;
         }
@@ -88,45 +66,65 @@ const sendMessage = async (userId, logedUserId, messageBody) =>
 {
     try
     {
-        console.log(userId);
         let conversationId = await getConversations(userId, logedUserId);
-
         if (!conversationId)
         {
-            await createConversation();
+
+            await createConversation(userId, logedUserId);
             conversationId = await getConversations(userId, logedUserId);
-            console.log(conversationId);
             if (!conversationId) { throw new Error("Ceva nu a mers bine la preluarea mesajelor"); };
-            await axios.post(API_URL + "messages/send", { userId, conversationId, messageBody });
+            await axios.post(API_URL + "messages/send", { userId: logedUserId, conversationId, messageBody });
         }
         else
         {
-            await axios.post(API_URL + "messages/send", { userId, ConvId: conversationId, messageBody });
+            await axios.post(API_URL + "messages/send", { userId: logedUserId, ConvId: conversationId, messageBody });
         }
     }
     catch (error)
     {
         console.log(error);
     }
+}
 
+const createConversation = async (userId, logedUserId) =>
+{
+    try
+    {
+        await axios.post(API_URL + "conversations", { UserId: userId, OtherId: logedUserId });
+    }
+    catch (error)
+    {
+
+    }
 
 }
 
 
-const deleteMessage = () =>
+const getAllConversations = async () =>
 {
-
-}
-
-const deleteConv = () =>
-{
-
+    try
+    {
+        const currentUser = await UserService.getCurrentUser();
+        if (currentUser)
+        {
+            const response = await axios.get(API_URL + "conversations/" + currentUser.id);
+            if (response.data)
+                return response.data;
+        }
+    }
+    catch (error)
+    {
+        console.log(error);
+        return null;
+    }
 }
 
 const MessengerService = {
     getMessages,
     sendMessage,
-    getMessagesByBody
+    getMessagesByBody,
+    getAllConversations,
+    getMessagesFromConv
 };
 
 export default MessengerService;

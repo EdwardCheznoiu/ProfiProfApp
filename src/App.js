@@ -1,15 +1,50 @@
 import './App.css';
 import Footer from './components/big/Footer';
-import AuthService from './services/auth.service';
+import UserService from './services/users.service';
 import { useState, useEffect } from 'react';
-import NavigationRouter from './components/big/NavigationRouter';
+import { useNavigate } from 'react-router-dom';
+import NavigationRouter from './components/navigation/NavigationRouter';
+import ToastSucces from './components/ToastSucces';
+import { useLocation } from 'react-router-dom';
 function App()
 {
+  const location = useLocation();
+  const [messageShown, setMessageShown] = useState(false);
+  const [renderFooter, setRenderFooter] = useState(true);
+
+
+  useEffect(() =>
+  {
+    if (location.pathname === '/messages' || location.pathname === '/teachers' || location.pathname === '/students')
+    {
+      setRenderFooter(false);
+    } else
+    {
+      setRenderFooter(true);
+    }
+  }, [location.pathname]);
+
+
+  useEffect(() =>
+  {
+    const storedValue = localStorage.getItem('loginSucces');
+    const hasBeenShown = storedValue === 'true';
+
+    if (!hasBeenShown)
+    {
+      setMessageShown(true);
+      localStorage.setItem('messageShown', 'true');
+    }
+  }, [messageShown]);
+
+
+
 
   return (
     <>
       <NavigationRouter />
 
+      {renderFooter && <Footer />}
     </>
   );
 

@@ -3,9 +3,11 @@ import UserService from '../../services/users.service';
 import { useState, useEffect } from 'react';
 import '../css/pages/UserProfile.css';
 import '../css/components/Loading.css'
-import Chat from '../../components/big/Chat'
+import Chat from '../../components/profile/Chat'
 import { Link, useLocation } from 'react-router-dom';
-import Toast from '../../components/big/Toast';
+import Navigation from '../../components/profile/Navigation';
+import ToastError from '../../components/ToastError';
+import ToastSucces from '../../components/ToastSucces';
 function UserProfile()
 {
     const [isLoading, setIsLoading] = useState(true);
@@ -13,6 +15,9 @@ function UserProfile()
     const [logedUser, setLogedUser] = useState("");
     const [loginDetails, setLoginDetails] = useState("");
     const location = useLocation();
+    const [showEdit, setShowEdit] = useState(false);
+    const [error, setError] = useState("");
+    const [succes, setSucces] = useState("");
     useEffect(() =>
     {
         handleLoadingData();
@@ -47,9 +52,10 @@ function UserProfile()
             setLogedUser(usr);
         } catch (error)
         {
-            setLogedUser("-NO NAME-");
+            setLogedUser("");
         }
     }
+
 
     const handleLoginDetails = async () =>
     {
@@ -67,22 +73,51 @@ function UserProfile()
 
     }
 
+    const handleShowEdit = () =>
+    {
+        setShowEdit(!showEdit);
+    };
+
+    const handleSendFriendReq = async (loggedUserId, otherUserId) =>
+    {
+        try
+        {
+            await UserService.postUserFriend(loggedUserId, otherUserId);
+            setSucces("Ai adaugat un nou prieten");
+        }
+        catch (error)
+        {
+            setError('Ești deja prieten cu acest utilizator')
+        }
+    }
+
+    const resetError = () =>
+    {
+        setError("");
+    }
+
+    const resetSucces = () =>
+    {
+        setSucces("");
+    }
+    console.log(logedUser)
     return (
         <>
             {
                 isLoading ? <div className='loading'><img src={require('../imgs/users_listview/loading.gif')} /> </div> :
                     (
                         <>
-                            <Toast message={"Text de proba"} />
-                            {logedUser.id != user.id && <Chat message={{ userId: user.id, logedUserId: logedUser.id, userFname: user.fname, userLname: user.lnmae }} />}
+                            {error && <ToastError message={error} duration={4000} resetError={resetError} />}
+                            {succes && <ToastSucces message={succes} duration={4000} resetError={resetSucces} />}
+                            {logedUser.id != user.id && <Chat message={{ userId: user.id, logedUserId: logedUser.id, logedUserFname: logedUser.fname, logedUserLname: logedUser.lname, userFname: user.fname, userLname: user.lnmae }} />}
                             <div className="user-profile">
                                 <div className='user-settings-holder'>
                                     <div className='user-settings'>
-                                        {logedUser.id == user.id && <Link to="/"><img src={require('../../static/imgs/users_profile/settings.png')} /></Link>}
+                                        <Link to={`/edit_profile/${logedUser.id}`}>{logedUser.id == user.id && <img onClick={handleShowEdit} src={require('../../static/imgs/users_profile/settings.png')} />}</Link>
                                     </div>
                                 </div>
                                 <div className="user-profile-img">
-                                    <img src={user.profileimage ? require(`${user.ProfileImage}`) : require('../../static/imgs/users_profile/male.png')} alt="UserProfileImage" />
+                                    <img src={user.profileImage ? require(`../${user.profileImage.split('static/')[1]}`) : require('../../static/imgs/users_profile/no-profile.png')} alt="UserProfileImage" />
                                 </div>
                                 <div className="user-profile-name">
                                     <div className='inline'>
@@ -92,52 +127,22 @@ function UserProfile()
                                             logedUser.id != user.id && (
                                                 <>
                                                     <div className='vertical-line'></div>
-                                                    <img onClick={() => UserService.postUserFriend(user.id, logedUser.id)} src={require('../../static/imgs/users_profile/add.png')} />
+                                                    <img onClick={() => handleSendFriendReq(user.id, logedUser.id)} src={require('../../static/imgs/users_profile/add.png')} />
                                                     <img src={require('../../static/imgs/users_profile/message.png')} />
                                                 </>
                                             )
                                         }
                                     </div>
                                     <div className='user-active-role'>- {user.role} -</div>
-                                    <>Ultima autentificare: {loginDetails.LastLogin}</>
+                                    <>Ultima autentificare: {loginDetails.LastLogin.split('+')[0]}</>
                                 </div>
                             </div>
 
-                            <ul className='user-profile-navbar'>
-                                <li>Despre</li>
-                                {user.role == "Teacher" &&
-                                    (
-                                        <>
-                                            <li>Publicatii</li>
-                                            <li>Cercetare</li>
-                                        </>
-                                    )
-                                }
-                                <li>Prieteni</li>
-                            </ul>
+                            {user && <Navigation message={{ user: user, logedUser: logedUser }} />}
 
-                            <div className="user-details">
-                                <div className='user-details-item'>Nume: {user.fname}</div>
-                                <div className='user-details-item'>Prenume: {user.lnmae}</div>
-                                <div className='user-details-item'>Numar de telefon: {user.phoneNumber} </div>
-                                {user.Role == "Teacher" &&
-                                    (
-                                        <>
-                                            <div className='user-details-item'>Functia ocupata: </div>
-                                            <div className='user-details-item'>Cabinet: </div>
-                                            <div className='user-details-item'>Cursuri: </div>
-                                            <div className='user-details-item'>Publicatii: </div>
-                                            <div className='user-details-item'>Cercetare: </div>
-                                        </>
-                                    )
-                                }
-                                <div className='user-details-item'>Rol: {user.role}</div>
-                                <div className='user-details-item'>Despre: {user.details}</div>
-                            </div>
                         </>
                     )
             }
-
         </>
     )
 }
